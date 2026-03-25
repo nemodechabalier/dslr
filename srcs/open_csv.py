@@ -40,24 +40,41 @@ def cal(dataset: DataFrame) -> dict :
     stats ={}
     features_columns = dataset.columns[6:]
     print(features_columns[1])
-    i = 0
     for col in features_columns:
         feature = []
-        for _, row in dataset.iterrows():
-            if not math.isnan(row[col]):
-                feature.append(row[col])
-        stats[features_columns[i]] = {}
-        stats[features_columns[i]]["count"] = len(feature)
-        stats[features_columns[i]]["mean"] = sum(feature) / len(feature)
-        stats[features_columns[i]]["std"] = 0
+        nan = 0
+
+        for value in dataset[col]:
+            if math.isnan(value):
+                nan += 1
+
+            else:
+                feature.append(value)
+
+        if len(feature) == 0:
+            continue
+
+        stats[col] = {}
+        stats[col]["count"] = len(feature)
+        stats[col]["mean"] = sum(feature) / len(feature)
+        variance = 0
+
+        for value in feature:
+            mean = stats[col]["mean"]
+            variance += (value - mean) ** 2
+        
+        variance = variance / len(feature)
+        stats[col]["variance"] = variance
+        stats[col]["std"] = math.sqrt(variance)
         feature.sort()
-        stats[features_columns[i]]["min"] = feature[0]
-        stats[features_columns[i]]["max"] = feature[len(feature) - 1]
-        stats[features_columns[i]]["25%"] = feature[int(len(feature) * 0.25)]
-        stats[features_columns[i]]["50%"] = feature[int(len(feature) * 0.5)]
-        stats[features_columns[i]]["75%"] = feature[int(len(feature) * 0.75)]
-        print(stats[features_columns[i]]["mean"])
-        i += 1
+        stats[col]["min"] = feature[0]
+        stats[col]["max"] = feature[len(feature) - 1]
+        stats[col]["25%"] = feature[int(len(feature) * 0.25)]
+        stats[col]["50%"] = feature[int(len(feature) * 0.5)]
+        stats[col]["75%"] = feature[int(len(feature) * 0.75)]
+        stats[col]["range"] = stats[col]["max"] - stats[col]["min"]
+        stats[col]["missing"] = nan
+        print(stats[col]["std"])
 
     return stats
 
