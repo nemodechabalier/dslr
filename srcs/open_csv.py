@@ -36,6 +36,31 @@ def load(path: str) -> DataFrame:
         print(f"Error: {e}")
         return None
 
+def cal(dataset: DataFrame) -> dict :
+    stats ={}
+    features_columns = dataset.columns[6:]
+    print(features_columns[1])
+    i = 0
+    for col in features_columns:
+        feature = []
+        for _, row in dataset.iterrows():
+            if not math.isnan(row[col]):
+                feature.append(row[col])
+        stats[features_columns[i]] = {}
+        stats[features_columns[i]]["count"] = len(feature)
+        stats[features_columns[i]]["mean"] = sum(feature) / len(feature)
+        stats[features_columns[i]]["std"] = 0
+        feature.sort()
+        stats[features_columns[i]]["min"] = feature[0]
+        stats[features_columns[i]]["max"] = feature[len(feature) - 1]
+        stats[features_columns[i]]["25%"] = feature[int(len(feature) * 0.25)]
+        stats[features_columns[i]]["50%"] = feature[int(len(feature) * 0.5)]
+        stats[features_columns[i]]["75%"] = feature[int(len(feature) * 0.75)]
+        print(stats[features_columns[i]]["mean"])
+        i += 1
+
+    return stats
+
 
 def take_grade(dataset: DataFrame) -> list :
     if dataset is None:
@@ -84,7 +109,7 @@ def calc_means(grade: list) -> list:
 
     for i in range(len(means)):
         means[i] = means[i] / tots[i] if tots[i] > 0 else None
-
+    print(means)
     return means
 
 def clean_NaN(grade: list):
@@ -98,7 +123,6 @@ def clean_NaN(grade: list):
                 if means[idy] is not None:
                     grade[idx][idy] = means[idy]
     return grade
-    
 
     
 def clean_NaN(grade: list):
@@ -115,10 +139,14 @@ def clean_NaN(grade: list):
     
 def take_clean_data()-> list:
     data = load("../dataset/dataset_train.csv")
+    if data is None:
+        data = load("./dataset/dataset_train.csv")
+
     if data is not None:
         for column in data.columns:
             size = data[column].notna().sum()
             print(f"{column}: {size}")
+    cal(data)
     grade = take_grade(data)
     house = take_house(data)
     print(len(grade))
@@ -127,5 +155,5 @@ def take_clean_data()-> list:
     clean_NaN(grade)
     print(len(grade))
     print(len(house))
-    print(grade)
+    # print(grade)
     return house, grade
