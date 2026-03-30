@@ -21,7 +21,7 @@ def main() -> int:
         print("Unable to load dataset.")
         return 1
 
-    run_histogram(dataset_store)
+    run_histogram(dataset_store, "Arithmancy")
     return 0
 
 
