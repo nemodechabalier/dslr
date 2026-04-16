@@ -11,19 +11,44 @@ from data.pipeline import try_prepare_dataset
 from visualization.pair_plot import run_pair_plot
 
 
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Pair plot script entrypoint.")
-    parser.add_argument("dataset", nargs="?", default="dataset/dataset_train.csv")
+    parser = argparse.ArgumentParser(
+        description="Display a pair plot for selected features split by Hogwarts house.",
+    )
+    parser.add_argument(
+        "dataset",
+        help="Path to CSV dataset file (example: dataset/dataset_train.csv)",
+    )
+    parser.add_argument(
+        "features",
+        nargs="+",
+        help=(
+            "Feature names to include in pair plot "
+            "(example: Arithmancy Astronomy Herbology)"
+        ),
+    )
     args = parser.parse_args()
 
-    dataset_store = try_prepare_dataset([args.dataset, f"../{args.dataset}", f"./{args.dataset}"])
+    paths = [args.dataset, f"../{args.dataset}", f"./{args.dataset}"]
+    dataset_store = try_prepare_dataset(paths)
     if dataset_store is None:
-        print("Unable to load dataset.")
+        print(
+            "Error: unable to load dataset. "
+            "Check the path and file format. Tried paths: "
+            + ", ".join(paths)
+        )
         return 1
 
-    run_pair_plot(dataset_store)
+    try:
+        run_pair_plot(dataset_store, args.features)
+    except ValueError as err:
+        print(f"Error: {err}")
+        return 2
+
     return 0
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

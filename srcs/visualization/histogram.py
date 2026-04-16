@@ -9,12 +9,10 @@ def run_histogram(dataset_store: DatasetStore, feature: str) -> None:
     """Plot score distributions for one feature split by Hogwarts house."""
     if feature not in dataset_store.feature_names:
         available = ", ".join(dataset_store.feature_names)
-        raise ValueError(f"Unknown feature '{feature}'. Available features: {available}")
-
-    plt.figure(figsize=(10, 6))
-    plt.title(f"Histogramme de {feature} par maison")
-    plt.xlabel(feature)
-    plt.ylabel("Nombre d'eleves")
+        raise ValueError(
+            f"Feature '{feature}' not found in dataset. "
+            f"Available features are: {available}"
+        )
 
     feature_idx = dataset_store.feature_names.index(feature)
 
@@ -33,11 +31,15 @@ def run_histogram(dataset_store: DatasetStore, feature: str) -> None:
         if isinstance(value, (int, float)) and not is_nan(value):
             by_house[house].append(value)
 
+    plt.figure(figsize=(10, 6))
+    plt.title(f"Histogramme de {feature} par maison")
+    plt.xlabel(feature)
+    plt.ylabel("Nombre d'eleves")
     bins = 20
-    plt.hist(by_house["Gryffindor"], bins=bins, alpha=0.5, label="Gryffindor")
-    plt.hist(by_house["Hufflepuff"], bins=bins, alpha=0.5, label="Hufflepuff")
-    plt.hist(by_house["Ravenclaw"], bins=bins, alpha=0.5, label="Ravenclaw")
-    plt.hist(by_house["Slytherin"], bins=bins, alpha=0.5, label="Slytherin")
+    plt.hist(by_house["Gryffindor"], bins=bins, alpha=0.5, label="Gryffindor", color="red")
+    plt.hist(by_house["Hufflepuff"], bins=bins, alpha=0.5, label="Hufflepuff", color="yellow")
+    plt.hist(by_house["Ravenclaw"], bins=bins, alpha=0.5, label="Ravenclaw", color="blue")
+    plt.hist(by_house["Slytherin"], bins=bins, alpha=0.5, label="Slytherin", color="green")
 
     plt.legend()
     plt.tight_layout()

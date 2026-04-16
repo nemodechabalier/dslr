@@ -12,18 +12,44 @@ from visualization.scatter_plot import run_scatter_plot
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Scatter plot script entrypoint.")
-    parser.add_argument("dataset", nargs="?", default="dataset/dataset_train.csv")
+    
+    parser = argparse.ArgumentParser(
+        description="Display a pair plot for one feature split by Hogwarts house.",
+    )
+    parser.add_argument(
+        "dataset",
+        help="Path to CSV dataset file (example: dataset/dataset_train.csv)",
+    )
+    parser.add_argument(
+        "feature_1",
+        help="Feature name to plot (example: Arithmancy)",
+    )
+    parser.add_argument(
+        "feature_2",
+        help="Feature name to plot (example: Arithmancy)",
+    )
     args = parser.parse_args()
 
-    dataset_store = try_prepare_dataset([args.dataset, f"../{args.dataset}", f"./{args.dataset}"])
+    paths = [args.dataset, f"../{args.dataset}", f"./{args.dataset}"]
+    dataset_store = try_prepare_dataset(paths)
     if dataset_store is None:
-        print("Unable to load dataset.")
+        print(
+            "Error: unable to load dataset. "
+            "Check the path and file format. Tried paths: "
+            + ", ".join(paths)
+        )
         return 1
 
-    run_scatter_plot(dataset_store)
+    try:
+        run_scatter_plot(dataset_store, args.feature_1, args.feature_2)
+    except ValueError as err:
+        print(f"Error: {err}")
+        return 2
+
     return 0
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
