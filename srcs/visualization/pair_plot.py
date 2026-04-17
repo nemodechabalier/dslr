@@ -6,7 +6,7 @@ import seaborn as sns
 
 def run_pair_plot(dataset_store: DatasetStore, features: list) -> None:
     """Display a pair plot for multiple selected features with house coloring."""
-    if len(features) < 2:
+    if not isinstance(features, list) or len(features) < 2:
         raise ValueError("Pair plot requires at least 2 features.")
 
     for feature in features:
@@ -24,7 +24,6 @@ def run_pair_plot(dataset_store: DatasetStore, features: list) -> None:
     if data.empty:
         raise ValueError("No rows available to plot after filtering missing values.")
 
-    # Adjust figure size based on number of features
     num_features = len(features)
     size_per_plot = 2.5
     fig_size = (num_features * size_per_plot, num_features * size_per_plot)
