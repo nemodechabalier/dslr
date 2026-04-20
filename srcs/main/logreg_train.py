@@ -13,7 +13,7 @@ from ml.train import save_weights, train_one_vs_all, train_models
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Display a pair plot for selected features split by Hogwarts house.",
+        description="Train one-vs-all logistic regression models on selected features.",
     )
     parser.add_argument(
         "dataset",
@@ -21,10 +21,11 @@ def main() -> int:
     )
     parser.add_argument(
         "features",
-        nargs="+",
+        nargs="*",
+        default=["Astronomy", "Herbology", "Divination", "Muggle Studies", "Ancient Runes", "History of Magic", "Charms", "Flying"],
         help=(
-            "Feature names to include in pair plot "
-            "(example: Arithmancy Astronomy Herbology)"
+            "Feature names to use for training "
+            "(defaults to Arithmancy, Astronomy, Herbology, Divination, Muggle Studies, Ancient Runes, History of Magic, Charms, Flying if not provided)"
         ),
     )
     args = parser.parse_args()
