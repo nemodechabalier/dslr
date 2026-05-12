@@ -25,7 +25,7 @@ def main() -> int:
         default=["Astronomy", "Herbology", "Divination", "Muggle Studies", "Ancient Runes", "History of Magic", "Charms", "Flying"],
         help=(
             "Feature names to use for training "
-            "(defaults to Arithmancy, Astronomy, Herbology, Divination, Muggle Studies, Ancient Runes, History of Magic, Charms, Flying if not provided)"
+            "(defaults to Astronomy, Herbology, Divination, Muggle Studies, Ancient Runes, History of Magic, Charms, Flying if not provided)"
         ),
     )
     args = parser.parse_args()

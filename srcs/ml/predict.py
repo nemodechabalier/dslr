@@ -4,6 +4,13 @@ from typing import Dict, List
 
 from data.models import DatasetStore
 
+"""
+pour le one vs all
+Gryffindor fliying, et notamant flying herbology
+Slytherin divination, et notament divination avec astronomie
+Hufflepuff pas de matières évidente par contre Herbology vs Astronomy, Herbologie vs Charms
+Ravenclaw Muggle Studies et notament Muggle Studies 
+"""
 
 def load_weights(weights_path: str) -> Dict[str, list]:
     with open(weights_path, "r", encoding="utf-8") as file_obj:
