@@ -53,5 +53,5 @@ def run_pair_plot(dataset_store: DatasetStore, features: list) -> None:
 
     g.fig.subplots_adjust(left=0.15, bottom=0.15, right=0.95, top=0.95)
 
-    plt.show()
+    plt.savefig(f"visu/pair_plots/{'_'.join(features)}.png")
     

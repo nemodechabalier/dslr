@@ -43,4 +43,4 @@ def run_histogram(dataset_store: DatasetStore, feature: str) -> None:
 
     plt.legend()
     plt.tight_layout()
-    plt.show()
+    plt.savefig(f"visu/histograms/{feature}.png")

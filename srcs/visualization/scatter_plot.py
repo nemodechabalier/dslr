@@ -51,4 +51,4 @@ def run_scatter_plot(dataset_store: DatasetStore, feature_1: str, feature_2: str
     plt.title(f"{feature_1} vs {feature_2}")
     plt.legend()
     plt.tight_layout()
-    plt.show()
+    plt.savefig(f"visu/scatter_plots/{feature_1}_{feature_2}.png")

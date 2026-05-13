@@ -1,6 +1,8 @@
 import csv
 import json
 from typing import Dict, List
+from .utils import simozoide, normalized_value
+
 
 from data.models import DatasetStore
 
@@ -12,16 +14,20 @@ Hufflepuff pas de matières évidente par contre Herbology vs Astronomy, Herbolo
 Ravenclaw Muggle Studies et notament Muggle Studies 
 """
 
-def load_weights(weights_path: str) -> Dict[str, list]:
-    with open(weights_path, "r", encoding="utf-8") as file_obj:
-        return json.load(file_obj)
 
-
-def predict_houses(dataset_store: DatasetStore, weights: Dict[str, list]) -> List[str]:
+def predict_houses(dataset_store: DatasetStore, data: Dict[str, list]) -> List[str]:
     """Placeholder for one-vs-all logistic regression prediction."""
-    _ = dataset_store
-    _ = weights
-    raise NotImplementedError("Logistic regression prediction is not implemented yet.")
+    features = data["features"]
+    weights = data["weights"]
+    describe = data["describe"]
+    normalized_data = normalized_value(dataset_store, features)
+    print(data)
+    X = normalized_data[features].values  # Convertir en NumPy array
+    y = normalized_data["Hogwarts House"].values
+
+    
+    
+    
 
 
 def write_predictions(predictions: List[str], output_path: str = "houses.csv") -> None:

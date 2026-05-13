@@ -8,7 +8,7 @@ SRCS_DIR = CURRENT_DIR.parent
 if str(SRCS_DIR) not in sys.path:
     sys.path.insert(0, str(SRCS_DIR))
 
-from data.pipeline import try_prepare_dataset
+from data import try_prepare_dataset
 
 
 def _format_value(value: float) -> str:
@@ -67,10 +67,10 @@ def _print_stats(stats: Dict[str, Dict[str, float]], feature_names: List[str], t
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Manual describe for Hogwarts dataset.")
-    parser.add_argument("dataset", nargs="?", default="dataset/dataset_train.csv", help="Path to dataset CSV")
+    parser.add_argument("datasets", nargs="?", default="datasets/dataset_train.csv", help="Path to dataset CSV")
     args = parser.parse_args()
 
-    paths = [args.dataset, f"../{args.dataset}", f"./{args.dataset}"]
+    paths = [args.datasets, f"../{args.datasets}", f"./{args.datasets}"]
     dataset_store = try_prepare_dataset(paths)
 
     if dataset_store is None:

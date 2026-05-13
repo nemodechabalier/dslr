@@ -7,8 +7,8 @@ SRCS_DIR = CURRENT_DIR.parent
 if str(SRCS_DIR) not in sys.path:
     sys.path.insert(0, str(SRCS_DIR))
 
-from data.pipeline import try_prepare_dataset
-from visualization.histogram import run_histogram
+from data import try_prepare_dataset
+from visualization import run_histogram
 
 
 def main() -> int:
@@ -16,8 +16,8 @@ def main() -> int:
         description="Display a histogram for one feature split by Hogwarts house.",
     )
     parser.add_argument(
-        "dataset",
-        help="Path to CSV dataset file (example: dataset/dataset_train.csv)",
+        "datasets",
+        help="Path to CSV dataset file (example: datasets/dataset_train.csv)",
     )
     parser.add_argument(
         "feature",
@@ -25,7 +25,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    paths = [args.dataset, f"../{args.dataset}", f"./{args.dataset}"]
+    paths = [args.datasets, f"../{args.datasets}", f"./{args.datasets}"]
     dataset_store = try_prepare_dataset(paths)
     if dataset_store is None:
         print(
