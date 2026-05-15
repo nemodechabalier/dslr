@@ -16,6 +16,12 @@ def main() -> int:
         description="Train one-vs-all logistic regression models on selected features.",
     )
     parser.add_argument(
+        "method",
+        nargs="?",
+        default="batch",
+        help="Gradient descent method (batch or stochastic)",
+    )
+    parser.add_argument(
         "datasets",
         nargs="?",
         default="datasets/dataset_train.csv",
@@ -24,7 +30,7 @@ def main() -> int:
     parser.add_argument(
         "features",
         nargs="*",
-        default=["Astronomy", "Herbology", "Divination", "Muggle Studies", "Ancient Runes", "History of Magic", "Charms", "Flying"],
+        default=["Astronomy", "Herbology", "Divination", "Muggle Studies", "Ancient Runes", "History of Magic", "Charms", "Flying", ],
         help=(
             "Feature names to use for training "
             "(defaults to Astronomy, Herbology, Divination, Muggle Studies, Ancient Runes, History of Magic, Charms, Flying if not provided)"
@@ -43,7 +49,7 @@ def main() -> int:
         return 1
 
     try:
-        train_models(dataset_store, args.features)
+        train_models(dataset_store, args.features, args.method)
     except ValueError as err:
         print(f"Error: {err}")
         return 2

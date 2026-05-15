@@ -2,7 +2,8 @@ import json
 from typing import Dict
 from pandas import DataFrame
 import numpy as np
-from .utils import simozoide, normalized_value
+from .predict import write_predictions
+from .utils import simozoide, compute_cost
 
 from data.models import DatasetStore
 
@@ -14,25 +15,43 @@ Hufflepuff pas de matières évidente par contre Herbology vs Astronomy, Herbolo
 Ravenclaw Muggle Studies et notament Muggle Studies 
 """
 
-def compute_cost(X, y, theta):
-    """Binary cross-entropy cost function"""
-    h = simozoide(X @ theta)
-    cost = -np.mean(y * np.log(h + 1e-15) + (1 - y) * np.log(1 - h + 1e-15))
-    return cost
-    
-def gradiant_descent(X, y, theta, alpha = 0.1, num_iterations = 1000):
-    m = len(y)
-    for iter in range(num_iterations):
-        h = simozoide(X @ theta)
-        gradient = (X.T @ (h - y)) / m
-        theta = theta - alpha * gradient
-        if iter % 100 == 0:
-           cost = compute_cost(X, y, theta)
-           print(f"Iteration {iter}, Cost: {cost}")
-    return theta
-        
+def normalized_value(dataset_store: DatasetStore, features: list[str]) -> DataFrame:
+    selected_column = features + ["Hogwarts House"]
+    data = dataset_store.clean_dataframe[selected_column].copy()
+    data = data.dropna(subset=features)
+    #print(data)
+    for feature in features:
+        mean = dataset_store.stats_clean[feature]["mean"]
+        std = dataset_store.stats_clean[feature]["std"]
+        data[feature] = (data[feature] - mean) / std
+    #print(data)
+    return data
 
-def train_models(dataset_store: DatasetStore, features: list[str]) -> Dict[str, list]:
+
+def gradiant_descent(X, y, theta, method = 'batch'):
+    if method == 'batch':
+        alpha = 0.1
+        num_iterations = 10000
+        m = len(y)
+        for iter in range(num_iterations):
+            h = simozoide(X @ theta)
+            gradient = (X.T @ (h - y)) / m
+            theta = theta - alpha * gradient
+    if method == 'stochastic':
+        alpha = 0.1
+        num_epochs = 100
+        m = len(y)
+        for iter in range(num_epochs):
+            i = np.random.randint(m)
+            x_i = X[i]
+            y_i = y[i]
+            h_i = simozoide(np.dot(x_i, theta))
+            gradient = (h_i - y_i) * x_i
+            theta = theta - alpha * gradient
+    return theta
+
+
+def train_models(dataset_store: DatasetStore, features: list[str], method: str = 'batch') -> Dict[str, list]:
     if not isinstance(features, list) :
         raise ValueError("Pair plot requires at least 2 features.")
 
@@ -44,16 +63,20 @@ def train_models(dataset_store: DatasetStore, features: list[str]) -> Dict[str, 
                 f"Available features are: {available}"
             )
 
+    if method not in ['batch', 'stochastic']:
+        raise ValueError("Invalid method. Choose 'batch' or 'stochastic'.")
+
     print(f"Features selected for train : {features}")
     normalized_data = normalized_value(dataset_store, features)
     X = normalized_data[features].values  # Convertir en NumPy array
     y = normalized_data["Hogwarts House"].values
-    weights = train_one_vs_all(X, y)
+    write_predictions(y, "true_houses.csv")
+    weights = train_one_vs_all(X, y, method)
     print(f"Trained weights: {weights}")
     save_json(features, weights, dataset_store.stats_clean, "datasets/logreg_weights.json")
 
 
-def train_one_vs_all(X , y) -> Dict[str, list]:
+def train_one_vs_all(X , y, method) -> Dict[str, list]:
     houses = ["Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"]
     weights = {}
     
@@ -62,7 +85,7 @@ def train_one_vs_all(X , y) -> Dict[str, list]:
     for house in houses:
         y_binary = (y == house).astype(float)
         theta = np.zeros(X_with_bias.shape[1])
-        theta = gradiant_descent(X_with_bias, y_binary, theta, 0.1, 10000)
+        theta = gradiant_descent(X_with_bias, y_binary, theta, method)
         print(f"Trained theta for {house}: {theta}")
         weights[house] = theta.tolist()
     return weights

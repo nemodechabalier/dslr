@@ -25,11 +25,7 @@ def main() -> int:
         return 1
 
     data = load_json(args.logreg_weights)
-    print(f"Loaded weights: {data['weights']}")
     predict_houses(dataset_store, data)
-    # print(f"Dataset stats: {data['describe']}")
-    # write_predictions(predictions, args.output)
-    # print(f"Predictions saved to {args.output}")
     return 0
 
 
