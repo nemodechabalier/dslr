@@ -1,5 +1,6 @@
 import json
 from typing import Dict
+from matplotlib.pylab import shuffle
 from pandas import DataFrame
 import numpy as np
 from .predict import write_predictions
@@ -41,13 +42,14 @@ def gradiant_descent(X, y, theta, method = 'batch'):
         alpha = 0.1
         num_epochs = 100
         m = len(y)
-        for iter in range(num_epochs):
-            i = np.random.randint(m)
-            x_i = X[i]
-            y_i = y[i]
-            h_i = simozoide(np.dot(x_i, theta))
-            gradient = (h_i - y_i) * x_i
-            theta = theta - alpha * gradient
+        for epoch in range(num_epochs):
+            indices = np.random.permutation(m)
+            for i in indices:
+                x_i = X[i]
+                y_i = y[i]
+                h_i = simozoide(np.dot(x_i, theta))
+                gradient = (h_i - y_i) * x_i
+                theta = theta - alpha * gradient
     return theta
 
 
