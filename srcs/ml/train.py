@@ -48,6 +48,19 @@ def gradiant_descent(X, y, theta, method = 'batch'):
             h_i = simozoide(np.dot(x_i, theta))
             gradient = (h_i - y_i) * x_i
             theta = theta - alpha * gradient
+    if method == 'mini-batch':
+        alpha = 0.1
+        num_epochs = 100
+        batch_size = 32
+        m = len(y)
+        for epoch in range(num_epochs):
+            for start_idx in range(0, m, batch_size):
+                end_idx = min(start_idx + batch_size, m)
+                X_batch = X[start_idx:end_idx]
+                y_batch = y[start_idx:end_idx]
+                h_batch = simozoide(X_batch @ theta)
+                gradient = (X_batch.T @ (h_batch - y_batch)) / len(y_batch)
+                theta = theta - alpha * gradient
     return theta
 
 
@@ -63,14 +76,14 @@ def train_models(dataset_store: DatasetStore, features: list[str], method: str =
                 f"Available features are: {available}"
             )
 
-    if method not in ['batch', 'stochastic']:
-        raise ValueError("Invalid method. Choose 'batch' or 'stochastic'.")
+    if method not in ['batch', 'stochastic', 'mini-batch']:
+        raise ValueError("Invalid method. Choose 'batch', 'stochastic', or 'mini-batch'.")
 
     print(f"Features selected for train : {features}")
     normalized_data = normalized_value(dataset_store, features)
     X = normalized_data[features].values  # Convertir en NumPy array
     y = normalized_data["Hogwarts House"].values
-    write_predictions(y, "true_houses.csv")
+    #write_predictions(y, "true_houses.csv")
     weights = train_one_vs_all(X, y, method)
     print(f"Trained weights: {weights}")
     save_json(features, weights, dataset_store.stats_clean, "datasets/logreg_weights.json")
