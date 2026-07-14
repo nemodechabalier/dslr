@@ -33,7 +33,7 @@ def gradiant_descent(X, y, theta, method = 'batch'):
         alpha = 0.1
         num_iterations = 10000
         m = len(y)
-        for iter in range(num_iterations):
+        for epoch in range(num_iterations):
             h = simozoide(X @ theta)
             gradient = (X.T @ (h - y)) / m
             theta = theta - alpha * gradient
@@ -41,7 +41,7 @@ def gradiant_descent(X, y, theta, method = 'batch'):
         alpha = 0.1
         num_epochs = 100
         m = len(y)
-        for iter in range(num_epochs):
+        for epoch in range(num_epochs):
             i = np.random.randint(m)
             x_i = X[i]
             y_i = y[i]
