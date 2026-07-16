@@ -1,6 +1,7 @@
 from data.models import DatasetStore
 import matplotlib.pyplot as plt
 import seaborn as sns
+from pathlib import Path
 
 
 def run_pair_plot(dataset_store: DatasetStore, features: list) -> None:
@@ -23,10 +24,6 @@ def run_pair_plot(dataset_store: DatasetStore, features: list) -> None:
     if data.empty:
         raise ValueError("No rows available to plot after filtering missing values.")
 
-    num_features = len(features)
-    size_per_plot = 2.8
-    fig_size = (max(6.0, num_features * size_per_plot), max(6.0, num_features * size_per_plot))
-
     house_palette = {
         "Gryffindor": "#C62828",
         "Hufflepuff": "#F9A825",
@@ -42,27 +39,22 @@ def run_pair_plot(dataset_store: DatasetStore, features: list) -> None:
         diag_kind="hist",
         corner=True,
         plot_kws={"alpha": 0.6, "s": 18},
-        height=2.6,
+        height=2.4,
         aspect=1.0,
     )
-
-    g.fig.set_size_inches(*fig_size)
 
     for ax in g.axes.flat:
         if ax is not None:
             ax.tick_params(axis="both", labelsize=8)
-            if ax.get_xlabel():
-                ax.set_xlabel(ax.get_xlabel(), fontsize=9, labelpad=8)
-            if ax.get_ylabel():
-                ax.set_ylabel(ax.get_ylabel(), fontsize=9, labelpad=8)
 
     if g._legend is not None:
         g._legend.set_title("Hogwarts House")
-        g._legend.set_bbox_to_anchor((1.02, 0.5))
-        g._legend._loc = 6
-        g._legend.set_frame_on(False)
 
-    g.fig.subplots_adjust(left=0.14, bottom=0.14, right=0.78, top=0.95, wspace=0.15, hspace=0.15)
+    out_dir = Path("visu/pair_plots")
+    out_dir.mkdir(parents=True, exist_ok=True)
 
-    plt.savefig(f"visu/pair_plots/{'_'.join(features)}.png", bbox_inches="tight")
+    safe_name = "_".join(feature.replace(" ", "_") for feature in features)
+    # plt.show()
+
+    plt.savefig(out_dir / f"{safe_name}.png", bbox_inches="tight")
     

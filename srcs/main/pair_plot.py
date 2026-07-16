@@ -20,11 +20,15 @@ def main() -> int:
     )
     parser.add_argument(
         "datasets",
+        nargs="?",
+        default="datasets/dataset_train.csv",
         help="Path to CSV dataset file (example: datasets/dataset_train.csv)",
     )
     parser.add_argument(
         "features",
-        nargs="+",
+        nargs="*",
+        default=["Ancient Runes", "Arithmancy", "Astronomy","Care of Magical Creatures", "Charms", "Defense Against the Dark Arts", 
+                 "Divination","Flying", "Herbology","History of Magic", "Muggle Studies", "Potions", "Transfiguration"],
         help=(
             "Feature names to include in pair plot "
             "(example: Arithmancy Astronomy Herbology)"
