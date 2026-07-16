@@ -19,7 +19,7 @@ def main() -> int:
         "method",
         nargs="?",
         default="batch",
-        help="Gradient descent method (batch or stochastic)",
+        help="Gradient descent method (batch, stochastic, or mini-batch)",
     )
     parser.add_argument(
         "datasets",
