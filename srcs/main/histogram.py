@@ -12,6 +12,8 @@ from visualization import run_histogram
 
 
 def main() -> int:
+    """Entry point for the histogram visualization command."""
+
     parser = argparse.ArgumentParser(
         description="Display a histogram for one feature split by Hogwarts house.",
     )

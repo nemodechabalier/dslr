@@ -9,6 +9,8 @@ FeatureStats = Dict[str, Dict[str, float]]
 
 @dataclass
 class DatasetStore:
+    """Container for raw, cleaned, and derived dataset representations."""
+
     raw_dataframe: DataFrame
     clean_dataframe: DataFrame
     feature_names: List[str]

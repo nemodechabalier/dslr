@@ -17,6 +17,8 @@ Ravenclaw Muggle Studies et notament Muggle Studies
 """
 
 def normalized_value(dataset_store: DatasetStore, features: list[str], describe: Dict[str, Dict[str, float]]) -> DataFrame:
+    """Normalize a prediction dataset with the provided training statistics."""
+
     selected_column = features + ["Hogwarts House"]
     data = dataset_store.clean_dataframe[selected_column].copy()
     data = data.dropna(subset=features)
@@ -29,7 +31,8 @@ def normalized_value(dataset_store: DatasetStore, features: list[str], describe:
     return data
 
 def predict_houses(dataset_store: DatasetStore, data: Dict[str, list]) -> List[str]:
-    """Placeholder for one-vs-all logistic regression prediction."""
+    """Predict Hogwarts houses and write them to houses.csv."""
+
     features = data["features"]
     weights = data["weights"]
     describe = data["describe"]
@@ -48,6 +51,8 @@ def predict_houses(dataset_store: DatasetStore, data: Dict[str, list]) -> List[s
     return predictions
 
 def write_predictions(predictions: List[str], output_path: str = "houses.csv") -> None:
+    """Write predicted houses to a CSV file with the required header."""
+
     with open(output_path, "w", encoding="utf-8", newline="") as file_obj:
         writer = csv.writer(file_obj)
         writer.writerow(["Index", "Hogwarts House"])

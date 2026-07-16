@@ -13,6 +13,8 @@ from ml import load_json, predict_houses
 
 
 def main() -> int:
+    """Entry point for generating Hogwarts house predictions."""
+
     parser = argparse.ArgumentParser(description="One-vs-all logistic regression prediction entrypoint.")
     parser.add_argument("datasets", nargs="?", default="datasets/dataset_test.csv")
     parser.add_argument("logreg_weights", nargs="?", default="datasets/logreg_weights.json", help="Path to features, trained weights and describe file")

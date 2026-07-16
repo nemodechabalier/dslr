@@ -6,6 +6,8 @@ from .preprocess import is_nan
 
 
 def var_skew_kurt(values: List[float], mean: float) -> Tuple[float, float, float]:
+    """Compute variance, skewness, and kurtosis for a sorted numeric sample."""
+
     variance_sum = 0.0
     m2_sum = 0.0
     m3_sum = 0.0
@@ -34,6 +36,8 @@ def var_skew_kurt(values: List[float], mean: float) -> Tuple[float, float, float
 
 
 def _percentile_from_sorted(values: List[float], ratio: float) -> float:
+    """Return the percentile value from a pre-sorted sample using a simple index rule."""
+
     if not values:
         return float("nan")
     index = int(len(values) * ratio)
@@ -43,6 +47,8 @@ def _percentile_from_sorted(values: List[float], ratio: float) -> float:
 
 
 def compute_stats_for_matrix(feature_matrix: List[List[float]], feature_names: List[str]) -> FeatureStats:
+    """Compute descriptive statistics for each feature column in a matrix."""
+
     stats: FeatureStats = {}
 
     if not feature_matrix or not feature_names:

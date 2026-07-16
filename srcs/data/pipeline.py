@@ -13,6 +13,8 @@ from .stats import compute_stats_for_matrix
 
 
 def prepare_dataset(path: str) -> DatasetStore:
+    """Load a dataset, clean missing values, and compute statistics."""
+
     dataset = load_dataset(path)
     if dataset is None:
         raise FileNotFoundError(f"Unable to load dataset from '{path}'")
@@ -41,6 +43,8 @@ def prepare_dataset(path: str) -> DatasetStore:
 
 
 def try_prepare_dataset(paths: List[str]) -> Optional[DatasetStore]:
+    """Try several dataset paths and return the first successfully loaded store."""
+
     for path in paths:
         loaded = load_dataset(path)
         if loaded is None:

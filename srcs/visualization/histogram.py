@@ -3,10 +3,12 @@ import matplotlib.pyplot as plt
 import math
 
 def is_nan(value) -> bool:
+    """Return True when value is a floating-point NaN."""
+
     return isinstance(value, float) and math.isnan(value)
 
 def run_histogram(dataset_store: DatasetStore, feature: str) -> None:
-    """Plot score distributions for one feature split by Hogwarts house."""
+    """Plot a feature histogram split by Hogwarts house."""
     if feature not in dataset_store.feature_names:
         available = ", ".join(dataset_store.feature_names)
         raise ValueError(

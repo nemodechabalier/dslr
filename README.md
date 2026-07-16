@@ -226,7 +226,6 @@ python3 srcs/main/logreg_predict.py datasets/dataset_test.csv datasets/logreg_we
 ## 📈 Performance
 
 - Target accuracy: **≥98%** on test data
-- Current best (mini-batch): ~73% on validation split (80/20)
 - Optimization opportunities:
   - Feature selection & engineering
   - Learning rate tuning

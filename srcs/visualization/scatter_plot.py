@@ -3,14 +3,12 @@ import matplotlib.pyplot as plt
 import math
 
 def is_nan(value) -> bool:
+    """Return True when value is a floating-point NaN."""
+
     return isinstance(value, (float, int)) and math.isnan(value)
 
 def run_scatter_plot(dataset_store: DatasetStore, feature_1: str, feature_2: str) -> None:
-    """Placeholder for scatter plot visualization.
-
-    Expected question:
-    What are the two features that are similar?
-    """
+    """Plot two features against each other, grouped by house."""
     if feature_1 not in dataset_store.feature_names or feature_2 not in dataset_store.feature_names:
         available = ", ".join(dataset_store.feature_names)
         raise ValueError(

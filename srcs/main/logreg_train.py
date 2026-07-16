@@ -12,6 +12,8 @@ from ml import train_models
 
 
 def main() -> int:
+    """Entry point for training one-vs-all logistic regression models."""
+
     parser = argparse.ArgumentParser(
         description="Train one-vs-all logistic regression models on selected features.",
     )

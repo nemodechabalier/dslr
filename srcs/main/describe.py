@@ -12,10 +12,14 @@ from data import try_prepare_dataset
 
 
 def _format_value(value: float) -> str:
+    """Format a numeric value with six decimal places."""
+
     return f"{value:.6f}"
 
 
 def _shorten(text: str, width: int) -> str:
+    """Truncate text to fit a fixed display width."""
+
     if len(text) <= width:
         return text
     if width <= 3:
@@ -24,6 +28,8 @@ def _shorten(text: str, width: int) -> str:
 
 
 def _print_stats(stats: Dict[str, Dict[str, float]], feature_names: List[str], title: str, show_missing: bool) -> None:
+    """Print a formatted statistics table for the selected features."""
+
     if not stats:
         print(f"{title}: no numeric features found.")
         return
@@ -66,6 +72,8 @@ def _print_stats(stats: Dict[str, Dict[str, float]], feature_names: List[str], t
 
 
 def main() -> int:
+    """Entry point for the dataset description command."""
+
     parser = argparse.ArgumentParser(description="Manual describe for Hogwarts dataset.")
     parser.add_argument("datasets", nargs="?", default="datasets/dataset_train.csv", help="Path to dataset CSV")
     args = parser.parse_args()

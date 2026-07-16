@@ -13,6 +13,8 @@ from visualization import run_pair_plot
 
 
 def main() -> int:
+    """Entry point for the pair plot visualization command."""
+
     parser = argparse.ArgumentParser(
         description="Display a pair plot for selected features split by Hogwarts house.",
     )

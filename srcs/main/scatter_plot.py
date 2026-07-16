@@ -12,7 +12,8 @@ from visualization import run_scatter_plot
 
 
 def main() -> int:
-    
+    """Entry point for the scatter plot visualization command."""
+
     parser = argparse.ArgumentParser(
         description="Display a scatter plot for two features split by Hogwarts house.",
     )

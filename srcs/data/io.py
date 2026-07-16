@@ -5,7 +5,7 @@ from pandas import DataFrame
 
 
 def load_dataset(path: str) -> Optional[DataFrame]:
-    """Load a CSV file and display its dimensions."""
+    """Load a CSV file into a DataFrame and report its shape."""
     try:
         dataset = pd.read_csv(path)
         print(f"Loading dataset of dimensions {dataset.shape}")
