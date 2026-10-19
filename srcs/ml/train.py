@@ -94,7 +94,7 @@ def train_models(dataset_store: DatasetStore, features: list[str], method: str =
     #write_predictions(y, "true_houses.csv")
     weights = train_one_vs_all(X, y, method)
     print(f"Trained weights: {weights}")
-    save_json(features, weights, dataset_store.stats_clean, "datasets/logreg_weights.json")
+    save_json(features, weights, dataset_store.stats_clean, "datasets/logreg_weights.json", method)
 
 
 def train_one_vs_all(X , y, method) -> Dict[str, list]:
@@ -114,8 +114,9 @@ def train_one_vs_all(X , y, method) -> Dict[str, list]:
     return weights
 
 
-def save_json(features: list[str], weights: Dict[str, list], describe: Dict[str, float], output_path: str) -> None:
+
+def save_json(features: list[str], weights: Dict[str, list], describe: Dict[str, float], output_path: str, method: str) -> None:
     """Serialize the trained model metadata and weights to JSON."""
 
     with open(output_path, "w", encoding="utf-8") as file_obj:
-        json.dump({"features": features, "weights": weights, "describe": describe}, file_obj, indent=2)
+        json.dump({"features": features, "weights": weights, "describe": describe, "method": method}, file_obj, indent=2)

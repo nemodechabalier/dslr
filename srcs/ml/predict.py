@@ -47,7 +47,7 @@ def predict_houses(dataset_store: DatasetStore, data: Dict[str, list]) -> List[s
         # print(f"Sample {i}, Scores: {scores}")  # Debug: print scores for each house
         predicted_house = max(scores, key=scores.get)
         predictions.append(predicted_house)
-    write_predictions(predictions, "houses.csv")
+    write_predictions(predictions, "houses_" + data["method"] + ".csv")
     return predictions
 
 def write_predictions(predictions: List[str], output_path: str = "houses.csv") -> None:
