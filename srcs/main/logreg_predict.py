@@ -25,9 +25,12 @@ def main() -> int:
     if dataset_store is None:
         print("Unable to load dataset.")
         return 1
-
-    data = load_json(args.logreg_weights)
-    predict_houses(dataset_store, data)
+    try:
+        data = load_json(args.logreg_weights)
+        predict_houses(dataset_store, data)
+    except Exception as e:
+        print(f"Error: {e}")
+        return 2
     return 0
 
 

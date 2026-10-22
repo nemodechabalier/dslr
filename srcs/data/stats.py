@@ -31,6 +31,7 @@ def var_skew_kurt(values: List[float], mean: float) -> Tuple[float, float, float
 
     skewness = m3 / (m2 ** 1.5)
     kurtosis = m4 / (m2 * m2)
+    kurtosis -= 3.0  # Excess kurtosis
 
     return variance, skewness, kurtosis
 

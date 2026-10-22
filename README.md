@@ -13,7 +13,7 @@ A machine learning project implementing **one-vs-all logistic regression** to cl
   - Batch Gradient Descent
   - Stochastic Gradient Descent  
   - Mini-batch Gradient Descent
-- **Validation**: Measure accuracy and ensure ≥98% performance on held-out data
+- **Evaluation**: Measure model performance on a validation split or on the provided test set when needed
 
 ---
 
@@ -157,22 +157,21 @@ python3 srcs/main/logreg_predict.py datasets/dataset_test.csv datasets/logreg_we
 
 Output: `houses.csv` with predictions for each test sample
 
-#### Validation
+#### Evaluation
 
-Measure accuracy on a held-out split of training data:
+You can evaluate the model on a held-out subset of the training data or on the provided test set using a custom script or notebook. This repository does not include a dedicated `logreg_validate.py` script.
+
+A typical workflow is:
 
 ```bash
-# Default: 20% validation split, batch GD
-python3 srcs/main/logreg_validate.py datasets/dataset_train.csv
+# 1. Train the model
+python3 srcs/main/logreg_train.py batch datasets/dataset_train.csv
 
-# With different hyperparameters
-python3 srcs/main/logreg_validate.py datasets/dataset_train.csv mini-batch --test-size 0.25 --random-state 123
-
-# Custom features
-python3 srcs/main/logreg_validate.py datasets/dataset_train.csv batch Astronomy Charms Divination
+# 2. Generate predictions for the test set
+python3 srcs/main/logreg_predict.py datasets/dataset_test.csv datasets/logreg_weights.json
 ```
 
-Output displays validation accuracy (target: ≥98%)
+The goal remains to reach the best possible accuracy on the evaluation data.
 
 ---
 
@@ -193,7 +192,7 @@ Learning rate (α) = 0.1 for all methods
 - **No heavy-lifting functions** — Statistics computed from scratch using NumPy
 - **One-vs-all classification** — Trains 4 binary classifiers (one per Hogwarts house)
 - **Data normalization** — Features standardized using training set statistics
-- **Cross-validation ready** — Hold-out validation built into pipeline
+- **Optional validation workflow** — You can evaluate on a held-out split or test set with your own script
 - **Configurable features** — Select any subset of numerical features for training
 
 ---
@@ -208,17 +207,14 @@ source venv/bin/activate
 python3 srcs/main/describe.py datasets/dataset_train.csv
 python3 srcs/main/pair_plot.py datasets/dataset_train.csv
 
-# 3. Validate different methods
-python3 srcs/main/logreg_validate.py datasets/dataset_train.csv batch
-python3 srcs/main/logreg_validate.py datasets/dataset_train.csv mini-batch
-
-# 4. Train final model
+# 3. Train and compare different methods
+python3 srcs/main/logreg_train.py batch datasets/dataset_train.csv
 python3 srcs/main/logreg_train.py mini-batch datasets/dataset_train.csv
 
-# 5. Generate predictions
+# 4. Generate predictions
 python3 srcs/main/logreg_predict.py datasets/dataset_test.csv datasets/logreg_weights.json
 
-# 6. Submit houses.csv
+# 5. Submit houses.csv
 ```
 
 ---

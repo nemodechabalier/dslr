@@ -39,6 +39,7 @@ def main() -> int:
 
     try:
         run_histogram(dataset_store, args.feature)
+
     except ValueError as err:
         print(f"Error: {err}")
         return 2

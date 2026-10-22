@@ -33,7 +33,9 @@ def normalized_value(dataset_store: DatasetStore, features: list[str]) -> DataFr
 
 def gradiant_descent(X, y, theta, method = 'batch'):
     """Optimize theta with batch, stochastic, or mini-batch gradient descent."""
-
+    print(f"X: {X}")
+    print(f"y: {y}")
+    print(f"theta: {theta}")
     if method == 'batch':
         alpha = 0.1
         num_iterations = 10000
@@ -51,7 +53,7 @@ def gradiant_descent(X, y, theta, method = 'batch'):
             for i in indices:
                 x_i = X[i]
                 y_i = y[i]
-                h_i = simozoide(np.dot(x_i, theta))
+                h_i = simozoide(x_i @ theta)
                 gradient = (h_i - y_i) * x_i
                 theta = theta - alpha * gradient
     if method == 'mini-batch':
@@ -60,10 +62,13 @@ def gradiant_descent(X, y, theta, method = 'batch'):
         batch_size = 32
         m = len(y)
         for epoch in range(num_epochs):
+            indices = np.random.permutation(m)
+            X_shuffled = X[indices]
+            y_shuffled = y[indices]
             for start_idx in range(0, m, batch_size):
                 end_idx = min(start_idx + batch_size, m)
-                X_batch = X[start_idx:end_idx]
-                y_batch = y[start_idx:end_idx]
+                X_batch = X_shuffled[start_idx:end_idx]
+                y_batch = y_shuffled[start_idx:end_idx]
                 h_batch = simozoide(X_batch @ theta)
                 gradient = (X_batch.T @ (h_batch - y_batch)) / len(y_batch)
                 theta = theta - alpha * gradient
@@ -109,14 +114,28 @@ def train_one_vs_all(X , y, method) -> Dict[str, list]:
         y_binary = (y == house).astype(float)
         theta = np.zeros(X_with_bias.shape[1])
         theta = gradiant_descent(X_with_bias, y_binary, theta, method)
-        print(f"Trained theta for {house}: {theta}")
         weights[house] = theta.tolist()
     return weights
 
 
 
 def save_json(features: list[str], weights: Dict[str, list], describe: Dict[str, float], output_path: str, method: str) -> None:
-    """Serialize the trained model metadata and weights to JSON."""
+    """Serialize the trained model metadata and weights to JSON with only the data needed for prediction."""
+
+    mean = {}
+    std = {}
+    for feature in features:
+        if feature in describe and "mean" in describe[feature] and "std" in describe[feature]:
+            mean[feature] = describe[feature]["mean"]
+            std[feature] = describe[feature]["std"]
+
+    payload = {
+        "features": features,
+        "weights": weights,
+        "mean": mean,
+        "std": std,
+        "method": method,
+    }
 
     with open(output_path, "w", encoding="utf-8") as file_obj:
-        json.dump({"features": features, "weights": weights, "describe": describe, "method": method}, file_obj, indent=2)
+        json.dump(payload, file_obj, indent=2)
